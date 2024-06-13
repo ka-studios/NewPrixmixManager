@@ -26,6 +26,7 @@ Returns:<br>
   **container** : the id of the created container<br>
   **novnc_port** : the port that novnc is running on (random from 49153-65560)<br>
   **vnc_port** : port that the vnc server is running on (random from 49153-65560)<br>
+  **Note** : default VNC password is "pxmxpwd0". pass ?password=pxmxpwd0 to novnc url to automatically authenticate
 #### Destroy Container:<br>
 `POST 127.0.0.1:5546/containers/destroy`<br>
 Parameters:<br>
