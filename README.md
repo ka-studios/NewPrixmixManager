@@ -45,11 +45,12 @@ NewPrixmixManager runs on port 5546.
 #### Stop all Containers:
 `POST 127.0.0.1:5546/containers/resume`<br>
 **Parameters:**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("superdupersecret" by default)<br><br>
-#### Expose noVNC to zrok for use in frontend:
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("superdupersecret" by default)<br>
+#### Expose noVNC to zrok:
 `POST 127.0.0.1:5546/containers/novnc_expose`<br>
 **Parameters:**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorizaation token ("secretkey" by default)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;**port** : noVNC port to expose<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**port** : noVNC port to expose<br><br>
+
 ---
-Created by KAS
+Made with ❤️ by KAS and Charmunk
