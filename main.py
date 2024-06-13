@@ -17,7 +17,7 @@ async def create_container(request: Request, response: Response):
     while novnc = vnc:
       vnc = random.randint(49153, 65550)
     if data.get('auth') == "secretkey":
-        container = client.containers.run("kasplusplus/newprixmix:1.0.1", ports={6080:novnc, 5904:vnc}, detach=True, mem_limit="512m")
+        container = client.containers.run("newprixmix", ports={6080:novnc, 5904:vnc}, detach=True, mem_limit="512m")
         return {
             "status":"success",
             "container":container.id,
