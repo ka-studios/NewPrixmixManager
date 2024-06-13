@@ -1,14 +1,18 @@
-from fastapi import FastAPI, Request, Response, status
+from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect, status
 import docker
 import random
 import subprocess
+import asyncio
+import re
+import time
+import threading
 
 client = docker.from_env()
 api = FastAPI()
 
 @api.post("/containers/create")
 async def create_container(request: Request, response: Response):
-    host = request.client.host
+
     #if client !== "ip_here_later":
     #    response.status_code = status.HTTP_401_UNAUTHORIZED
     data = await request.json()
@@ -83,8 +87,59 @@ async def killall_containers(request: Request, response: Response):
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"not slick"}
+async def stream_reader(stream, url_pattern):
+    while True:
+        line = await stream.readline()
+        if not line:
+            break
+        line = line.decode('utf-8').strip()
+        urls = url_pattern.findall(line)
+        for url in urls:
+            yield url
+
+@api.post("/containers/novnc_expose")
+async def websockify_connect(request: Request, response: Response):
+    try:
+        data = await request.json()
+    except:
+        return {"status":"missing auth token"}
+    if not data.get('port'):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"status":"port missing from request"}
+    if data.get('auth') == "secretkey":
+        command = ["zrok", "share", "public", f"172.17.0.1:{data.get('port')}", "--headless"]
+        process = await asyncio.create_subprocess_exec(*command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        url_pattern = re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
+
+        async def read_output(stream):
+            async for url in stream_reader(stream, url_pattern):
+                return url
+
+        stdout_task = asyncio.create_task(read_output(process.stdout))
+        stderr_task = asyncio.create_task(read_output(process.stderr))
+
+
+        done, pending = await asyncio.wait([stdout_task, stderr_task], return_when=asyncio.FIRST_COMPLETED)
+
+
+        for task in pending:
+            task.cancel()
+
+
+        url = next(iter(done)).result()
+
+        return {"url": url}
+    else:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status":"auth token invalid"}
+
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(api, port=5546)
+    uvicorn.run(api, host="127.0.0.1", port=5546)
+
+
 
 

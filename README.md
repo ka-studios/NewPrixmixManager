@@ -31,7 +31,7 @@ NewPrixmixManager runs on port 5546.
 `POST 127.0.0.1:5546/containers/destroy`<br>
 **Parameters**:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
-&nbsp;&nbsp;*&nbsp;&nbsp;**id** : id of the container to destroy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**id** : id of the container to destroy<br>
 #### Suspend Container:
 `POST 127.0.0.1:5546/containers/suspend`<br>
 **Parameters:**<br>
@@ -46,6 +46,9 @@ NewPrixmixManager runs on port 5546.
 `POST 127.0.0.1:5546/containers/resume`<br>
 **Parameters:**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("superdupersecret" by default)<br><br>
-
+#### Expose noVNC to zrok for use in frontend:
+`POST 127.0.0.1:5546/containers/novnc_expose`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorizaation token ("secretkey" by default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**port** : noVNC port to expose
 ---
 Created by KAS
