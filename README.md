@@ -20,32 +20,32 @@ NewPrixmixManager runs on port 5546.
 
 #### Create Container:
 `POST 127.0.0.1:5546/containers/create`<br>
-Parameters:<br>
-  **auth** : authorization token ("secretkey" by default)<br>
-Returns:<br>
-  **container** : the id of the created container<br>
-  **novnc_port** : the port that novnc is running on (random from 49153-65560)<br>
-  **vnc_port** : port that the vnc server is running on (random from 49153-65560)<br>
-  **Note** : default VNC password is "pxmxpwd0". pass ?password=pxmxpwd0 to novnc url to automatically authenticate
+**Parameters**:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
+**Returns:**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**container** : the id of the created container<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**novnc_port** : the port that novnc is running on (random from 49153-65560)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**vnc_port** : port that the vnc server is running on (random from 49153-65560)<br>
+**Note** : default VNC password is "pxmxpwd0". pass ?password=pxmxpwd0 to novnc url to automatically authenticate
 #### Destroy Container:<br>
 `POST 127.0.0.1:5546/containers/destroy`<br>
-Parameters:<br>
-  **auth** : authorization token ("secretkey" by default)<br>
-  **id** : id of the container to destroy<br>
+**Parameters**:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
+&nbsp;&nbsp;*&nbsp;&nbsp;**id** : id of the container to destroy<br>
 #### Suspend Container:
 `POST 127.0.0.1:5546/containers/suspend`<br>
-Parameters:<br>
-  **auth** : authorization token ("secretkey" by default)<br>
-  **id** : id of the container to suspend<br>
+**Parameters:**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**id** : id of the container to suspend<br>
 #### Unsuspend Container:
 `POST 127.0.0.1:5546/containers/resume`<br>
-Parameters:<br>
-  **auth** : authorization token ("secretkey" by default)<br>
-  **id** : id of the container to unsuspend<br>
+**Parameters:**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**id** : id of the container to unsuspend<br>
 #### Stop all Containers:
 `POST 127.0.0.1:5546/containers/resume`<br>
-Parameters:<br>
-  **auth** : authorization token ("superdupersecret" by default)<br><br>
+**Parameters:**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("superdupersecret" by default)<br><br>
 
 ---
 Created by KAS
