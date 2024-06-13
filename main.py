@@ -14,7 +14,7 @@ async def create_container(request: Request, response: Response):
     data = await request.json()
     novnc = random.randint(49153, 65560)
     vnc = random.randint(49153, 65550)
-    while novnc = vnc:
+    while novnc == vnc:
       vnc = random.randint(49153, 65550)
     if data.get('auth') == "secretkey":
         container = client.containers.run("newprixmix", ports={6080:novnc, 5904:vnc}, detach=True, mem_limit="512m")
