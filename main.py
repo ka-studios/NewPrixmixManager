@@ -36,8 +36,12 @@ async def destroy_container(request: Request, response: Response):
     data = await request.json()
     container_id = data.get('id')
     if data.get('auth') == "secretkey":
-        container = client.containers.get(container_id)
-        container.stop()
+        try:
+            container = client.containers.get(container_id)
+            container.stop()
+        except docker.errors.APIError:
+            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            return {"status":"container not found"}
 
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -47,8 +51,12 @@ async def suspend_container(request: Request, response: Response):
     data = await request.json()
     container_id = data.get('id')
     if data.get('auth') == "secretkey":
-        container = client.containers.get(container_id)
-        container.pause()
+        try:
+            container = client.containers.get(container_id)
+            container.pause()
+        except docker.errors.APIError:
+            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            return {"status":"container not found"}
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"auth token invalid"}
@@ -57,8 +65,12 @@ async def resume_container(request: Request, response: Response):
     data = await request.json()
     container_id = data.get('id')
     if data.get('auth') == "secretkey":
-        container = client.containers.get(container_id)
-        container.unpause()
+        try:
+            container = client.containers.get(container_id)
+            container.unpause()
+        except docker.errors.APIError:
+            response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+            return {"status":"container not found"}
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"auth token invalid"}
