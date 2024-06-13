@@ -1,5 +1,5 @@
 # NewPrixmixManager
----
+
 ## Running
 
 Install Dependencies:
@@ -14,7 +14,6 @@ Run NewPrixmixManager:
 ```bash
 python3 main.py
 ```
----
 
 ## Usage
 NewPrixmixManager runs on port 5546.
