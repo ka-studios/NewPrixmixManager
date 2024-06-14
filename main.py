@@ -10,6 +10,11 @@ import threading
 client = docker.from_env()
 api = FastAPI()
 
+def stopaftertimeout(container_id, delay):
+    time.sleep.(delay)
+    container = client.containers.get(container_id)
+    container.stop()
+
 @api.post("/containers/create")
 async def create_container(request: Request, response: Response):
 
@@ -22,6 +27,8 @@ async def create_container(request: Request, response: Response):
       vnc = random.randint(49153, 65550)
     if data.get('auth') == "secretkey":
         container = client.containers.run("newprixmix", ports={6080:novnc, 5904:vnc}, detach=True, mem_limit="512m")
+        stopthread = threading.Thread(target=stopaftertimeout, args=(container.id, 7200))
+        stopthread.start()
         return {
             "status":"success",
             "container":container.id,
@@ -97,6 +104,11 @@ async def stream_reader(stream, url_pattern):
         for url in urls:
             yield url
 
+async def terminate_process_after_delay(process, delay):
+    await asyncio.sleep(delay)
+    process.terminate()
+    await process.wait()
+
 @api.post("/containers/novnc_expose")
 async def websockify_connect(request: Request, response: Response):
     try:
@@ -109,7 +121,7 @@ async def websockify_connect(request: Request, response: Response):
     if data.get('auth') == "secretkey":
         command = ["zrok", "share", "public", f"172.17.0.1:{data.get('port')}", "--headless"]
         process = await asyncio.create_subprocess_exec(*command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+        asyncio.create_task(terminate_process_after_delay(process, 7200))
         url_pattern = re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
 
         async def read_output(stream):
@@ -133,8 +145,6 @@ async def websockify_connect(request: Request, response: Response):
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"auth token invalid"}
-
-
 
 if __name__ == "__main__":
     import uvicorn
