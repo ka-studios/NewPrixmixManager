@@ -11,7 +11,7 @@ client = docker.from_env()
 api = FastAPI()
 
 def stopaftertimeout(container_id, delay):
-    time.sleep.(delay)
+    time.sleep(delay)
     container = client.containers.get(container_id)
     container.stop()
 
