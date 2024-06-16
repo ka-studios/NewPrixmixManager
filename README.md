@@ -4,7 +4,7 @@
 
 Install Dependencies:
 ```bash
-pip3 install fastapi docker uvicorn
+pip3 install -r requirements.txt
 ```
 Build the docker image:
 ```bash
