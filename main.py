@@ -1,4 +1,7 @@
 from fastapi import FastAPI, Request, Response, WebSocket, WebSocketDisconnect, status
+from slowapi.errors import RateLimitExceeded
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
 import docker
 import random
 import subprocess
@@ -17,6 +20,7 @@ def stopaftertimeout(container_id, delay):
     container.stop()
 
 @api.post("/containers/create")
+@limiter.limit("60/minute")
 async def create_container(request: Request, response: Response):
 
     #if client !== "ip_here_later":
@@ -42,6 +46,7 @@ async def create_container(request: Request, response: Response):
         return {"status":"auth token invalid"}
 
 @api.post("/containers/destroy")
+@limiter.limit("60/minute")
 async def destroy_container(request: Request, response: Response):
     #if client !== "ip_here_later":
     #    response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -59,6 +64,7 @@ async def destroy_container(request: Request, response: Response):
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"auth token invalid"}
 @api.post("/containers/suspend")
+@limiter.limit("60/minute")
 async def suspend_container(request: Request, response: Response):
     data = await request.json()
     container_id = data.get('id')
@@ -73,6 +79,7 @@ async def suspend_container(request: Request, response: Response):
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"auth token invalid"}
 @api.post("/containers/resume")
+@limiter.limit("60/minute")
 async def resume_container(request: Request, response: Response):
     data = await request.json()
     container_id = data.get('id')
@@ -87,6 +94,7 @@ async def resume_container(request: Request, response: Response):
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status":"auth token invalid"}
 @api.post("/containers/killall")
+@limiter.limit("60/minute")
 async def killall_containers(request: Request, response: Response):
     data = await request.json()
     if data.get('auth') == "superdupersecret": # Spooky!
@@ -111,6 +119,7 @@ async def terminate_process_after_delay(process, delay):
     await process.wait()
 
 @api.post("/containers/novnc_expose")
+@limiter.limit("60/minute")
 async def websockify_connect(request: Request, response: Response):
     try:
         data = await request.json()

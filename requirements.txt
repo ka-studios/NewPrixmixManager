@@ -1,3 +1,4 @@
-dockerpy==1.10.6
+docker==1.10.6
 fastapi==0.111.0
+slowapi==0.1.9
 uvicorn==0.30.1
