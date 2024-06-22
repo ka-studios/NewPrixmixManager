@@ -1,0 +1,6 @@
+{
+  "policies": {
+    "OverrideFirstRunPage": "about:newtab",
+    "DisableProfileRefresh": true
+  }
+}
