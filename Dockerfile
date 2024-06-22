@@ -28,7 +28,7 @@ RUN adduser -D -g "" prixmix && \
 # shush its the vnc password
 RUN mkdir -p /home/prixmix/.config/openbox
 # boilerplate
-RUN echo "exec firefox" > /home/prixmix/.config/openbox/autostart
+RUN echo "exec firefox \$URL" > /home/prixmix/.config/openbox/autostart
 # autostart firefox
 COPY supervisord.conf /etc/supervisor.conf
 EXPOSE 5904 6080
