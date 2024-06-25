@@ -17,7 +17,8 @@ python3 main.py
 
 ## Usage
 NewPrixmixManager runs on port 5546.
-
+You must start nginx with the provided nginx.conf before starting NPM.
+Access noVNC on containers at `<server ip>/port/<novnc port number>/vnc.html`
 #### Create Container:
 `POST 127.0.0.1:5546/containers/create`<br>
 **Parameters**:<br>
@@ -46,11 +47,6 @@ NewPrixmixManager runs on port 5546.
 `POST 127.0.0.1:5546/containers/resume`<br>
 **Parameters:**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("superdupersecret" by default)<br>
-#### Expose noVNC to zrok:
-`POST 127.0.0.1:5546/containers/novnc_expose`<br>
-**Parameters:**<br>
-&nbsp;&nbsp;&nbsp;&nbsp;**auth** : authorization token ("secretkey" by default)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;**port** : noVNC port to expose<br><br>
 
 ---
 Made with ❤️ by KAS and Charmunk
