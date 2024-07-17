@@ -1,0 +1,22 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:sessions.db"
+}
+
+generator db {
+    provider                = "prisma-client-py"
+    interface               = "asyncio"
+    recursive_type_depth    = 5
+}
+
+model Container {
+        id      String      @id @default(cuid())
+        cid     String
+        created DateTime    @default(now())
+        expires DateTime
+        bearer  String?     @unique
+        ram     Int
+        novnc   Int
+        vnc     Int
+        prem    Boolean
+}
