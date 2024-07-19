@@ -14,7 +14,7 @@ model Container {
         cid     String
         created DateTime    @default(now())
         expires DateTime
-        bearer  String?     @unique
+        bearer  String
         ram     Int
         novnc   Int
         vnc     Int

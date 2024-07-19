@@ -30,7 +30,7 @@ except docker.errors.DockerException:
     sys.exit(1)
 
 api = FastAPI()
-limiter = Limiter(app=app, key_func=get_remote_address)
+limiter = Limiter(key_func=get_remote_address)
 
 # stop containers after 2hr timeout (delay value added for future use with premium tier)
 def stopaftertimeout(container_id, delay):
@@ -49,17 +49,21 @@ async def create_container(request: Request, response: Response) -> None:
     premium = data.get('premium', None)
     recv_url = data.get('url')
     username = data.get('user')
-    if premium == 1:
-        ram = 1024
-    elif premium == 2:
-        ram = 2048
-    elif premium == 3:
-        ram = 4096
-    else:
-        pass
     while novnc == vnc:
         vnc = random.randint(49153, 65550)  # ensure novnc port and vnc port do not conflict
     if data.get('auth') == auth:  # change this pls
+        if 'premium' in data:
+            if premium == 1:
+                ram = 1024
+            elif premium == 2:
+                ram = 2048
+            elif premium == 3:
+                ram = 4096
+            else:
+                ram = 768
+        else:
+            ram = 768
+        if premium is None: premium = 0
         container = client.containers.run("newprixmix", ports={6080:novnc, 5904:vnc}, detach=True, mem_limit=f"{ram}m", environment={"URL":recv_url})
         await db.container.create(
             {
@@ -69,9 +73,14 @@ async def create_container(request: Request, response: Response) -> None:
                 'novnc': novnc,
                 'bearer': username,
                 'vnc': vnc,
-                'prem': False if not premium else True,
+                'prem': False if premium == 0 else True,
             }
         )
+        payload = {
+            "container":container.id,
+            "novnc_port":novnc    
+        }
+        return payload
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"status": "auth token invalid"}
@@ -176,6 +185,17 @@ async def pruneContainers(request: Request, response: Response):
                 logging.error(f"Error removing container {container.cid}: {e}")
         await db.container.delete_many(where={'expires': {'lt': datetime.datetime.now()}})
         return Response("OK", status_code=200)
-
+@api.post("/sessions")
+async def get_sessions(request: Request, response: Response) -> None:
+    data = await request.json()
+    if data.get("auth") == auth:
+        db = Prisma()
+        await db.connect()
+        user = data.get('user')
+        result = await db.container.find_many(where={"bearer":user})
+        return result
+    else:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"status":"invalid auth token"}
 if __name__ == "__main__":
     uvicorn.run(api, host="127.0.0.1", port=5546)
